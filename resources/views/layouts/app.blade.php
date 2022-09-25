@@ -29,6 +29,7 @@
 
     <!-- Template Main CSS File -->
     <link href="/css/style.css" rel="stylesheet">
+    @yield('CSS')
 
 
 
@@ -125,6 +126,7 @@
 
         <!-- Template Main JS File -->
         <script src="/js/main.js"></script>
+        @yield('JS')
     </body>
 
 </html>

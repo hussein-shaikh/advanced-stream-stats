@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\packages;
+use App\Models\Subscriptions;
 use App\Providers\RouteServiceProvider;
+use Braintree\Subscription;
 use Exception;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -30,7 +32,6 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -67,6 +68,26 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        dd($request->all());
+        if ($request->has("package_id")) {
+
+            try {
+                $pId = Crypt::decrypt($request->package_id);
+            } catch (Exception $e) {
+                return redirect()->route("home")->withErrors(["Package Id Invalid"]);
+            }
+
+            $checkPackageIfExists = packages::where("id", $pId)->first();
+            if (empty($checkPackageIfExists)) {
+                return redirect()->route("home")->withErrors(["Package Id Invalid"]);
+            }
+
+            $checkSubscription = Subscriptions::where("user_id", $user->id)->where("is_active", 1)->whereNull("deleted_at")->first();
+
+            if (!empty($checkSubscription)) {
+                return abort(403, "You are already subscribed to our package, unsubscribe existing subscription for updating new pack");
+            }
+
+            $this->redirectTo = route("payment-init", ["amount" => Crypt::encrypt($checkPackageIfExists->amount), "package_id" => Crypt::encrypt($pId)]);
+        }
     }
 }

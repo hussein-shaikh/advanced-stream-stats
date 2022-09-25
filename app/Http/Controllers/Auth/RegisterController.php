@@ -72,6 +72,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            "is_active"=>1
         ]);
     }
 
@@ -103,9 +104,10 @@ class RegisterController extends Controller
 
             $checkPackageIfExists = packages::where("id", $pId)->first();
             if (empty($checkPackageIfExists)) {
+
                 return redirect()->route("home")->withErrors(["Package Id Invalid"]);
             }
-
+            $this->redirectTo = route("payment-init", ["amount" => Crypt::encrypt($checkPackageIfExists->amount), "package_id" => Crypt::encrypt($pId)]);
         }
     }
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->json('request');
             $table->json('response')->nullable();
             $table->timestamp("request_datetime");
-            $table->timestamp("response_datetime");
+            $table->timestamp("response_datetime")->nullable();
             $table->timestamps();
         });
     }

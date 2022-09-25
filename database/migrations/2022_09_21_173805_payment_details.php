@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid("id")->primary();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('package_id');
-            $table->string('transaction_id')->unique();
+            $table->string('transaction_id')->unique()->nullable();
             $table->foreign("user_id")->references("id")->on("users");
             $table->foreign("package_id")->references("id")->on("packages");
             $table->float('amount');

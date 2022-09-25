@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\packages;
+use App\Models\Subscriptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,7 +25,17 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (!Auth::check()) {
+            $packages = packages::all();
+            return view('welcome')->with("packages", $packages);
+        }
+        return redirect()->route('home');
+    }
+
+    public function dashboard(Request $request)
+    {
+        $checkSubscription = Subscriptions::where("user_id", $request->user()->id)->where("is_active", 1)->whereNull("deleted_at")->first();
         $packages = packages::all();
-        return view('welcome')->with("packages", $packages);
+        return view("dashboard.index")->with("subscription", $checkSubscription)->with("packages", $packages);
     }
 }

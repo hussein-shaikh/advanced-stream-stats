@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id', false);
             $table->unsignedBigInteger('package_id', false);
+            $table->uuid('payment_id');
             $table->foreign("user_id")->references("id")->on("users");
             $table->foreign("package_id")->references("id")->on("packages");
+            $table->foreign("payment_id")->references("id")->on("payment_details");
             $table->timestamp('valid_until');
             $table->boolean("is_active")->default(0)->index();
             $table->softDeletes();
