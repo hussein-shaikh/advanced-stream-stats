@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign("user_id")->references("id")->on("users");
             $table->foreign("package_id")->references("id")->on("packages");
             $table->foreign("payment_id")->references("id")->on("payment_details");
-            $table->timestamp('valid_until');
+            $table->date('valid_until');
             $table->boolean("is_active")->default(0)->index();
             $table->softDeletes();
             $table->timestamps();

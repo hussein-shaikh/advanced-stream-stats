@@ -54,7 +54,7 @@ class PaymentController extends Controller
                 $checkPackageValidty = packages::where("id", Crypt::decrypt($request->package_id))->first();
                 Subscriptions::create([
                     "user_id" => Auth::user()->id,
-                    "package_id" => Crypt::decrypt($request->package_id), "is_active" => 1, "valid_until" => date("Y-m-d H:i:s", strtotime("+" . $checkPackageValidty->days_validity . " days")),
+                    "package_id" => Crypt::decrypt($request->package_id), "is_active" => 1, "valid_until" => date("Y-m-d", strtotime("+" . $checkPackageValidty->days_validity . " days")),
                     "payment_id" => Crypt::decrypt($request->payment_id)
                 ]);
             } else {
